@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Personajes</title>
+</head>
+
+<body>
+    <header id="menu"></header>
+    <table border="1" id="tabla">
+        <thead>
+            <tr>
+                <th>Personaje</th>
+                <th>Imagen</th>
+            </tr>
+        </thead>
+        <tbody>
+            <div id="foto"></div>
+        </tbody>
+    </table>
+
+    <script src="./js/jquery-3.6.1.min.js"></script>
+    <script>
+        var urlSeries = "https://apiseriespersonajes2023.azurewebsites.net/";
+        $(document).ready(function () {
+            $("#menu").load("Menu.html");
+            loadPersonajes();
+        })
+        const parameters = new URLSearchParams(window.location.search);
+        function loadPersonajes() {
+            var idSerie = parameters.get("idSerie");
+            var request = "/api/Series/PersonajesSerie/" + idSerie;
+            
+            $.ajax({
+                "url": urlSeries + request,
+                "method": "GET",
+                "dataType": "JSON",
+                success: function (data) {
+                    var html = "";
+                    $.each(data, function (index, personajes) {
+                        var imagen = $("<img>", { 'src': personajes.imagen,"width":"300px","height":"300px" });
+                        html += "<tr>";
+                        html += "<td>" + personajes.nombre + "</td>";
+                        html += "<td>" + personajes.imagen + "</td>";
+                        html += "</tr>";
+
+                        $("#foto").append(imagen);
+                    })
+                    $("#tabla tbody").html(html);
+                   
+
+                }
+            })
+        }
+    </script>
+</body>
+
+</html>

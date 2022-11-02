@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>serie</title>
+</head>
+
+<body>
+    <header id="menu"></header>
+    <div id="foto"></div>
+    <h2 id="nombre"></h2>
+    <h3 id="puntuacion"></h3>
+
+    <div>
+        <a class="btn btn-info" id="personajes">Personajes</a>
+    </div>
+    <script src="./js/jquery-3.6.1.min.js"></script>
+    <script>
+        var urlSeries = "https://apiseriespersonajes2023.azurewebsites.net/";
+        $(document).ready(function () {
+            $("#menu").load("Menu.html");
+            loadSeries();
+        })
+        //vamos a recuperar los parametros de la ruta
+        //con la ayuda de este objeto
+        const parameters = new URLSearchParams(window.location.search);
+        function loadSeries() {
+            //recupero el id 
+            var idSerie = parameters.get("idSerie");
+            console.log(idSerie);
+            //creo un request
+            var request = "/api/Series/" + idSerie;
+            console.log(urlSeries + request);
+            $.ajax({
+                "url": urlSeries + request,
+                "method": "GET",
+                "dataType": "JSON",
+                success: function (data) {
+                    
+                    var imagen = $("<img>", { 'src': data.imagen,"width":"300px","height":"300px" });
+                    
+                    $("#foto").append(imagen);
+                    $("#nombre").text(data.nombre);
+                    $("#puntuacion").text(data.puntuacion);
+
+                    $("#personajes").attr("href","personajes.html?idSerie=" + idSerie);
+                }
+            })
+        }
+    </script>
+</body>
+
+</html>
